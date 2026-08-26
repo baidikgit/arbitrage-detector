@@ -1,0 +1,10 @@
+^C:\USERS\JARVIS\REPOS\ARBITRAGE-DETECTOR\BUILD\CMAKEFILES\0DF6B5AFAB32C46FD45529A434C74DD4\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/JARVIS/repos/arbitrage-detector -BC:/Users/JARVIS/repos/arbitrage-detector/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/JARVIS/repos/arbitrage-detector/build/arb_detector.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
