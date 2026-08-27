@@ -8,7 +8,7 @@
 using json = nlohmann::json;
 
 static const std::set<std::string> WATCH_CURRENCIES = {
-    "USDT", "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "DOGE", "EUR", "GBP"};
+    "USDT", "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "DOGE"};
 
 PriceMap fetchBinancePrices()
 {
@@ -35,10 +35,10 @@ PriceMap fetchBinancePrices()
     }
 
     // live prices
-    cpr::Response priceResp = cpr::Get(cpr::Url{"https://api.binance.com/api/v3/ticker/price"});
+    cpr::Response priceResp = cpr::Get(cpr::Url{"https://api.binance.com/api/v3/ticker/bookTicker"});
     if (priceResp.status_code != 200)
     {
-        std::cerr << "ticker/price failed, status: " << priceResp.status_code << "\n";
+        std::cerr << "bookTicker failed, status: " << priceResp.status_code << "\n";
         return prices;
     }
     json data = json::parse(priceResp.text);
@@ -47,15 +47,16 @@ PriceMap fetchBinancePrices()
     {
         std::string symbol = entry["symbol"];
         if (!symbolMap.count(symbol))
-            continue; // not in our curated set
+            continue;
 
-        double price = std::stod(entry["price"].get<std::string>());
-        if (price <= 0)
-            continue; // skip dead/delisted pairs
+        double bid = std::stod(entry["bidPrice"].get<std::string>());
+        double ask = std::stod(entry["askPrice"].get<std::string>());
+        if (bid <= 0 || ask <= 0)
+            continue;
 
         auto [base, quote] = symbolMap[symbol];
-        prices[base + "_" + quote] = price;
-        prices[quote + "_" + base] = 1.0 / price;
+        prices[base + "_" + quote] = bid;       // pay the bid
+        prices[quote + "_" + base] = 1.0 / ask; // get the ask
     }
 
     std::cout << "Fetched " << prices.size() << " price entries from Binance\n";
@@ -69,7 +70,7 @@ PriceMap generateSyntheticPrices()
     prices["BTC_USD"] = 64000.0;
     prices["USD_ETH"] = 1.0 / 3400.0;
     prices["ETH_USD"] = 3400.0;
-    prices["BTC_ETH"] = 18.9; // arbitrage
+    prices["BTC_ETH"] = 18.7;
     prices["ETH_BTC"] = 1.0 / 18.5;
     prices["USD_EUR"] = 0.92;
     prices["EUR_USD"] = 1.0 / 0.92;
