@@ -1,3 +1,0 @@
-C:/Users/JARVIS/repos/arbitrage-detector/build/CMakeFiles/detect.dir
-C:/Users/JARVIS/repos/arbitrage-detector/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/JARVIS/repos/arbitrage-detector/build/CMakeFiles/ZERO_CHECK.dir
