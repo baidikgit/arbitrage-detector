@@ -1,4 +1,4 @@
-# Multi-Exchange Arbitrage Detector
+# Triangular Arbitrage Detector
 
 A C++ tool that pulls live crypto prices from Binance, models them as a
 weighted graph, and checks whether a risk-free arbitrage loop exists,
